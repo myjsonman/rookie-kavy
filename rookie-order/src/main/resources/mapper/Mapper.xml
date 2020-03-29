@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kavy.rookie.order.dao.ItemMapper">
+
+    <resultMap id="BaseResultMap" type="com.kavy.rookie.order.entiry.Item" >
+        <result column="item_id" property="itemId" />
+        <result column="item_name" property="itemName" />
+        <result column="item_image" property="itemImage" />
+        <result column="price" property="price" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                item_id,
+                item_name,
+                item_image,
+                price
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.kavy.rookie.order.entiry.Item">
+        INSERT INTO item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test ='null != itemId'>
+                item_id,
+            </if>
+            <if test ='null != itemName'>
+                item_name,
+            </if>
+            <if test ='null != itemImage'>
+                item_image,
+            </if>
+            <if test ='null != price'>
+                price
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test ='null != itemId'>
+                #{itemId},
+            </if>
+            <if test ='null != itemName'>
+                #{itemName},
+            </if>
+            <if test ='null != itemImage'>
+                #{itemImage},
+            </if>
+            <if test ='null != price'>
+                #{price}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM item
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.kavy.rookie.order.entiry.Item">
+        UPDATE item
+        <set>
+            <if test ='null != itemId'>item_id = #{itemId},</if>
+            <if test ='null != itemName'>item_name = #{itemName},</if>
+            <if test ='null != itemImage'>item_image = #{itemImage},</if>
+            <if test ='null != price'>price = #{price}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM item
+        WHERE item_id = #{itemId}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM item
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM item
+    </select>
+
+</mapper>
